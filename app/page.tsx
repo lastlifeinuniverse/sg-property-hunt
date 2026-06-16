@@ -45,12 +45,14 @@ export default function Dashboard() {
     const scored = (rawListings ?? []).map((l: ListingRow) => {
       // Get the latest rating (most recent by created_at)
       let lr: Listing['latest_rating'] | null = null
-      if (Array.isArray(l.latest_rating)) {
-        const sorted = [...l.latest_rating].sort((a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        )
+      if (Array.isArray(l.latest_rating) && l.latest_rating.length > 0) {
+        const sorted = [...l.latest_rating].sort((a, b) => {
+          const aDate = new Date(a?.created_at ?? 0).getTime()
+          const bDate = new Date(b?.created_at ?? 0).getTime()
+          return bDate - aDate
+        })
         lr = sorted[0] ?? null
-      } else {
+      } else if (!Array.isArray(l.latest_rating)) {
         lr = l.latest_rating
       }
       const vn = Array.isArray(l.viewing_note)  ? (l.viewing_note[0]  ?? null) : l.viewing_note

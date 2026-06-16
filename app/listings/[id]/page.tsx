@@ -51,13 +51,14 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
     if (l) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let lr: Listing['latest_rating'] | null = null
-      if (Array.isArray((l as any).latest_rating)) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const sorted = [...(l as any).latest_rating].sort((a: any, b: any) =>
-          new Date((b as any)?.created_at ?? '').getTime() - new Date((a as any)?.created_at ?? '').getTime()
-        )
+      if (Array.isArray((l as any).latest_rating) && (l as any).latest_rating.length > 0) {
+        const sorted = [...(l as any).latest_rating].sort((a: any, b: any) => {
+          const aDate = new Date(a?.created_at ?? 0).getTime()
+          const bDate = new Date(b?.created_at ?? 0).getTime()
+          return bDate - aDate
+        })
         lr = sorted[0] ?? null
-      } else {
+      } else if (!Array.isArray((l as any).latest_rating)) {
         lr = (l as any).latest_rating
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
