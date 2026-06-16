@@ -52,8 +52,8 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let lr: Listing['latest_rating'] | null = null
       if (Array.isArray((l as any).latest_rating)) {
-        const sorted = [...(l as any).latest_rating].sort((a: Listing['latest_rating'], b: Listing['latest_rating']) =>
-          new Date(b!.created_at).getTime() - new Date(a!.created_at).getTime()
+        const sorted = [...(l as any).latest_rating].sort((a: any, b: any) =>
+          new Date(b?.created_at ?? '').getTime() - new Date(a?.created_at ?? '').getTime()
         )
         lr = sorted[0] ?? null
       } else {
